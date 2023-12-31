@@ -8,8 +8,9 @@ class Render:
     def renderObject(self, screen, texture, rectangle):
         screen.blit(texture, rectangle)
     def renderSnake(self, screen, texture, rectangles):
+        print("--------------------------------")
         for rectangle in rectangles:
-            print(rectangle.getRectangle())
+            print(rectangle, ":", rectangle.getRectangle())
             rectangle = rectangle.getRectangle()
             screen.blit(texture, rectangle)
     

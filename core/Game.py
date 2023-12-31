@@ -17,8 +17,7 @@ class Game:
         self.snakeHead = SnakeHead(self.snakeRect)
         self.gameEvents = GameEvents(self.snakeHead)
         self.snake = Snake(self.snakeHead)
-        self.snake.snakeMove()
-        self.snake.addSnakePart()
+        
 
     def gameLoop(self):
         while True:
@@ -38,12 +37,11 @@ class Game:
         self.gameEvents.keyEvents()
 
     def update(self):
-        self.snake.addSnakePart()
         self.snake.snakeMove()
         self.snakeHead.moveSnakeHead()
         self.snakeHead.snakeAndWall()
         self.snakeParts = self.snake.getSnakeParts()
-        
+        self.snake.addSnakePart()
         
 
     def renderer(self):

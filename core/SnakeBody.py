@@ -4,10 +4,17 @@ import pygame
 class SnakeBody:
     def __init__(self, rectangle):
         self.rectangle = rectangle
+        self.lastRectPos = (0,0)
     def setRectangle(self, rectangle):
         self.rectangle = rectangle
     def getRectangle(self):
         return self.rectangle
+    def setlastRectPos(self, lastRectPos):
+        self.lastRectPos = lastRectPos
+    def getlastRectPos(self):
+        return self.lastRectPos
+    
+    
     
 class SnakeHead(SnakeBody):
     def __init__(self, rectangle):
@@ -17,7 +24,11 @@ class SnakeHead(SnakeBody):
 
     def getRectangle(self):
         return super().getRectangle()
-
+    def getlastRectPos(self):
+        return super().getlastRectPos()
+    def setlastRectPos(self, lastRectPos):
+        super().setlastRectPos(lastRectPos)
+    
     def setDirectionUp(self):
         self.direction = (0, -self.speed)
 
@@ -31,6 +42,7 @@ class SnakeHead(SnakeBody):
         self.direction = (self.speed, 0)
 
     def moveSnakeHead(self):
+        self.lastRectPos = self.rectangle
         self.rectangle.move_ip(self.direction[0], self.direction[1])
         
 
