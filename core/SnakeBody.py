@@ -17,6 +17,10 @@ class SnakeHead(SnakeBody):
         super().__init__(rectangle)
         self.speed = 20
         self.direction = (self.speed, 0)
+        self.directionUp = (0, -self.speed)
+        self.directionLeft = (-self.speed, 0)
+        self.directionDown = (0, self.speed)
+        self.directionRight = (self.speed, 0)
 
     def getRectangle(self):
         return super().getRectangle()
@@ -24,32 +28,23 @@ class SnakeHead(SnakeBody):
         return super().getRectangleCopy()
 
     def setDirectionUp(self):
-        self.direction = (0, -self.speed)
+        if(self.direction != self.directionDown):
+            self.direction = self.directionUp
 
     def setDirectionLeft(self):
-        self.direction = (-self.speed, 0)
+        if(self.direction != self.directionRight):
+            self.direction = self.directionLeft
 
     def setDirectionDown(self):
-        self.direction = (0, self.speed)
+        if(self.direction != self.directionUp):
+            self.direction = self.directionDown
 
     def setDirectionRight(self):
-        self.direction = (self.speed, 0)
+        if(self.direction != self.directionLeft):
+            self.direction = self.directionRight
 
     def moveSnakeHead(self):
-        print("-------head after move:", self.rectangle)
+        #print("-------head after move:", self.rectangle)
         self.rectangle.move_ip(self.direction[0], self.direction[1])
-        print("-------head before move:", self.rectangle)
-
-    def snakeAndWall(self):
-        if self.rectangle.x > 1900:
-            self.rectangle.x = 0
-            return
-        elif self.rectangle.x < 0:
-            self.rectangle.x = 1900     
-            return
-        elif self.rectangle.y > 1060:
-            self.rectangle.y = 0   
-            return
-        elif self.rectangle.y < 0:
-            self.rectangle.y = 1060     
-            return
+        #print("-------head before move:", self.rectangle)
+    
