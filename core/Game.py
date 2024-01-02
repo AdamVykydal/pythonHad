@@ -7,18 +7,14 @@ from Snake import Snake
 
 class Game:
     def __init__(self):
-        pygame.init()
-
-        self.screen = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.clock = pygame.time.Clock()
         self.snakeTexture = pygame.image.load("souces\img\snakeBody.png")
         self.snakeRect = self.snakeTexture.get_rect(topleft=(500, 500))
         self.snakeBodyRender = Render()
         self.snakeHead = SnakeHead(self.snakeRect)
-        self.gameEvents = GameEvents(self.snakeHead)
         self.snake = Snake(self.snakeHead)
-        self.snake.snakeMove()
-        self.snake.addSnakePart()
+        self.gameEvents = GameEvents(self.snakeHead, self.snake) 
 
     def gameLoop(self):
         while True:
@@ -32,17 +28,18 @@ class Game:
 
             pygame.display.update()
 
-            self.clock.tick(5)
+            self.clock.tick(10)
 
     def handle_events(self):
         self.gameEvents.keyEvents()
 
     def update(self):
-        self.snake.addSnakePart()
         self.snake.snakeMove()
         self.snakeHead.moveSnakeHead()
         self.snakeHead.snakeAndWall()
         self.snakeParts = self.snake.getSnakeParts()
+        
+
         
         
 
