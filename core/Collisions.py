@@ -1,10 +1,11 @@
+from Fruits import Fruits
 class Collisions:
-    def __init__(self, snakeHead, snake, fruit, score ,game):
+    def __init__(self, snakeHead, snake, fruits, score ,game):
         self.snakeHead = snakeHead
         self.snake = snake
-        self.fruit = fruit
         self.score = score
         self.game = game
+        self.fruits = fruits
 
     def snakeAndWall(self):
         if self.snakeHead.rectangle.x > 1900:
@@ -27,8 +28,12 @@ class Collisions:
                 self.game.running = False
 
     def snakeAndFruit(self):
-        if self.snakeHead.rectangle == self.fruit.rectangle:
-            self.snake.addSnakePart()
-            self.score.addPoints()
-            self.score.printPoints()
-            self.fruit.generateFruit()
+        for fruit in self.fruits.fruitBasket:
+            if self.snakeHead.rectangle == fruit.getRectangle():
+                self.snake.addSnakePart()
+                self.score.addPoints()
+                self.score.printPoints()
+                fruit.generateFruit()
+                self.fruits.newFruit()
+            
+

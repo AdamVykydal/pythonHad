@@ -1,4 +1,5 @@
 from SnakeBody import SnakeBody
+
 class Snake():
     def __init__(self, snakeHead):
        self.snakeParts = []
