@@ -39,7 +39,6 @@ class Game:
             pygame.display.update()
 
             self.clock.tick(10)
-
     def handle_events(self):
         self.gameEvents.keyEvents()
         self.collisions.snakeAndFruit()
