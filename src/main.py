@@ -1,7 +1,8 @@
+import time
 import pygame
 from Game import Game
 from GameStartMenu import GameStartMenu
-import time
+
 
 pygame.init()
 
