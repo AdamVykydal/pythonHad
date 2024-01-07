@@ -6,7 +6,7 @@
 
 Unix/Macos
 
-`source .venv/bin/activate`
+`source venv/bin/activate`
 
 Windows
 
