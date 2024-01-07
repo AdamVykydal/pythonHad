@@ -43,11 +43,11 @@ class GameStartMenu:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    print(
-                        "pressed-------------------------------------------------------pres")
                     if self.singlplayerButton.collidepoint(mousePosition):
-                        print("------------------------------------------")
                         self.menu = False
-                        return
+                        return "singleplayer"
+                    if self.multiplayerButton.collidepoint(mousePosition):
+                        self.menu = False
+                        return "mutilplayer"
 
             pygame.display.update()

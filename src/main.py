@@ -11,13 +11,15 @@ screen = pygame.display.set_mode((1920, 1080))  # pygame.FULLSCREEN
 
 gameStartMenu = GameStartMenu(screen)
 
-gameStartMenu.createMenu()
+gameMode = gameStartMenu.createMenu()
 
 game = Game(screen)
 
-game.connectToGameServer()
-
-game.multiplayergameLoop()
+if gameMode == "singleplayer":
+    game.singlplayergameLoop()
+elif gameMode == "mutilplayer":
+    game.connectToGameServer()
+    game.multiplayergameLoop()
 
 time.sleep(5)
 
