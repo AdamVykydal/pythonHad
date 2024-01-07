@@ -1,8 +1,12 @@
 import socket
 import threading
+import pickle
+
 
 class Server:
     def __init__(self, serverIp, serverPort, maxClients):
+        
+        
         self.serverIp = serverIp
         self.serverPort = serverPort
         self.serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -11,10 +15,11 @@ class Server:
         self.connectedClients = 0
         self.maxClients = maxClients
         self.lock = threading.Lock()
+        self.clientsData = [(0,0),[(0,0)]]
         
         print(f"Server is listening on {self.serverIp}:{self.serverPort}")
     
-    def handleClient(self, clientSocket, clientIp):
+    def handleClient(self, clientIp):
         with self.lock:
             if self.connectedClients >= self.maxClients:
                 print(f"{clientIp} max clients reached; disconnected")
@@ -24,27 +29,35 @@ class Server:
             self.connectedClients += 1
             return True
     
-    def receiveData(self, clientSocket, clientIp):
+    def receiveData(self, clientSocket, clientIp, threadId):
         try:
             while True:
-                data = clientSocket.recv(1024)
+                data = clientSocket.recv(4000)
                 if not data:
                     break 
-                print(f"Received data: {clientIp}, {data.decode('utf-8')}")
+               
+                self.clientsData[threadId] = (pickle.loads(data))
+                print(f"Received data: {clientIp}, {self.clientsData[threadId]}")
+                print(self.clientsData[0])
+                print(self.clientsData[1])
+                self.sendData(clientSocket, threadId)
                 
-                self.sendData(clientSocket)
-        
         except Exception as e:
             print(f"{clientIp}: {e}")
         finally:
             with self.lock:
                 self.connectedClients -= 1
             clientSocket.close()
+        
     
-    def sendData(self, clientSocket):
+    def sendData(self, clientSocket, threadId):
+    
         try: 
-            messageToSend = "Ahoj, jsem Server!"
-            clientSocket.send(messageToSend.encode("utf-8"))
+            if threadId == 0:
+                
+                clientSocket.send(pickle.dumps(self.clientsData[1]))
+            else:
+                clientSocket.send(pickle.dumps(self.clientsData[0]))
             
         except Exception as e:
             print(f"Error sending data: {e}")
@@ -52,15 +65,17 @@ class Server:
     
     def start(self):
         try:
+            threadId = 0
             while True:
                 clientSocket, clientIp = self.serverSocket.accept()
                 print(f"{clientIp} is trying to connect")
 
-                if not self.handleClient(clientSocket, clientIp):
+                if not self.handleClient(clientIp):
                     continue 
-
-                clientHandler = threading.Thread(target=self.receiveData, args=(clientSocket, clientIp))
+                
+                clientHandler = threading.Thread(target=self.receiveData, args=(clientSocket, clientIp, threadId))
                 clientHandler.start()
+                threadId += 1
         
         except KeyboardInterrupt:
             print("Server stopped.")
