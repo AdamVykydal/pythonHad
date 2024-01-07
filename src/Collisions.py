@@ -1,6 +1,5 @@
-from Fruits import Fruits
 class Collisions:
-    def __init__(self, snakeHead, snake, fruits, score ,game):
+    def __init__(self, snakeHead, snake, fruits, score, game):
         self.snakeHead = snakeHead
         self.snake = snake
         self.score = score
@@ -35,5 +34,3 @@ class Collisions:
                 self.score.printPoints()
                 fruit.generateFruit()
                 self.fruits.newFruit()
-            
-
