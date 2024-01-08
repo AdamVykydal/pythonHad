@@ -1,5 +1,4 @@
 import pygame
-import sys
 
 
 class GameEvents:
@@ -7,7 +6,7 @@ class GameEvents:
         self.speed = 20
         self.direction = (self.speed, 0)
         self.snakeHead = snakeHead
-    
+
     def keyEvents(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -26,4 +25,3 @@ class GameEvents:
                 elif event.key == pygame.K_d:
                     self.snakeHead.setDirectionRight()
                     return
-    
