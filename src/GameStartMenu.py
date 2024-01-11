@@ -33,16 +33,13 @@ class GameStartMenu:
             self.settingsButton = self.drawText(
                 "Settings", self.font, self.textColor, 1920 / 2, 1080 / 2)
 
-            mousePosition = pygame.mouse.get_pos()
-            print(mousePosition)
-            print(self.singlplayerButton)
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.menu = False
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    mousePosition = pygame.mouse.get_pos()
                     if self.singlplayerButton.collidepoint(mousePosition):
                         self.menu = False
                         return "singleplayer"
