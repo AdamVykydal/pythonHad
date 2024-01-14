@@ -1,8 +1,10 @@
 import pygame
-from definitions import SOUNDS_DIR
+#from definitions import SOUNDS_DIR
+from LoadResources import LoadResources
 
 class Sounds:
     def __init__(self):
-        self.nomSound = pygame.mixer.music.load(SOUNDS_DIR + "\\" + "beep.mp3")
+        self.loadResources = LoadResources()
+        self.nomSound = self.loadResources.loadSound("beep.mp3")#pygame.mixer.music.load("resources\sounds\\beep.mp3")
     def playNomSound(self):
-        pygame.mixer.music.play()
+        self.nomSound.play()

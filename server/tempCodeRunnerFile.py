@@ -1,1 +1,0 @@
-# pylint: disable=broad-except

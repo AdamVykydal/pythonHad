@@ -4,7 +4,7 @@ class Renderer:
             rectangle = texture.get_rect(topleft=(objectForRender.coords.x, objectForRender.coords.y))
             screen.blit(texture, rectangle)
 
-    def renderEnemySnake(self, screen, texture, coordsList):
+    def renderServerObject(self, screen, texture, coordsList):
         for coords in coordsList:
             rectangle = texture.get_rect(topleft=coords)
             screen.blit(texture, rectangle)

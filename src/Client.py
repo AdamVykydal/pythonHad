@@ -1,8 +1,6 @@
 # pylint: disable=broad-except
 import socket
-import time
 import pickle
-
 
 class Client:
     def __init__(self, serverIp, serverPort):
@@ -12,25 +10,23 @@ class Client:
         self.snakePartsToSend = []
 
     def connectToServer(self):
-        while True:
-            if (self.clientSocket.connect_ex((self.serverIp, self.serverPort))) == 0:
-                break
-            print(
-                f"waiting for server on adress:{self.serverIp}:{self.serverPort}")
-            time.sleep(2)
-
+        try:
+            (self.clientSocket.connect_ex((self.serverIp, self.serverPort)))
+        except ConnectionError as e:
+            print(e)
+       
     def sendData(self):
         try:
             self.clientSocket.send(pickle.dumps(self.snakePartsToSend))
         except socket.error as e:
-            print(f"Chyba při odesílání dat: {e}")
+            print(f"sending data error {e}")
 
     def reciveData(self):
         try:
             data = self.clientSocket.recv(1024)
             data = pickle.loads(data)
             print(f"Received data: {data}")
-            return data
+            return data[0], data[1], data[2], data[3]
 
         except pickle.PickleError as e:
             print(e)
@@ -39,6 +35,5 @@ class Client:
     def prepareDataForSend(self, snakeParts):
         self.snakePartsToSend = []
         for snakePart in snakeParts:
-            print(snakePart.coords.x, snakePart.coords.y)
             self.snakePartsToSend.append(
                 (snakePart.coords.x, snakePart.coords.y))

@@ -1,5 +1,7 @@
 # pylint: disable=invalid-name
 from Game import Game
 
-game = Game()
-game.run()
+while True:
+    game = Game()
+
+    game.run()

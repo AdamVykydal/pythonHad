@@ -1,50 +1,62 @@
 import sys
 import pygame
+from Text import Text
 
 
 class GameStartMenu:
     def __init__(self, screen):
-        self.menu = True
-        self.screen = screen
-        self.singlplayerButton = None
-        self.multiplayerButton = None
-        self.settingsButton = None
-
-        pygame.display.set_caption("main menu")
-        self.font = pygame.font.SysFont("arialblack", 40)
-        self.textColor = (255, 255, 255)
+        self.buttonsFont = pygame.font.SysFont("arialBlack", 40)
+        self.hFont = pygame.font.SysFont("arialBlack", 80, bold=True)
+        self.primarTextColor = (255, 255, 255)
+        self.secondTextColor = (50, 0, 205)
         self.clock = pygame.time.Clock()
+        self.screen = screen
+        self.menu = True
+        self.objectsUpdate = ()
+        self.menuTitle = Text(1920 / 2, 1080 - 850, "menuTitle",
+                              self.hFont, self.primarTextColor, self.secondTextColor, "SNAKE", self.screen)
+        self.singleplayerButton = Text(1920 / 2, 1080 - 700, "singleplayerButton",
+                                       self.buttonsFont, self.primarTextColor, self.secondTextColor, "Singleplayer", self.screen)
+        self.multiplayerButton = Text(1920 / 2, 1080 - 600, "multiplayerButton",
+                                      self.buttonsFont, self.primarTextColor, self.secondTextColor, "Multiplayer", self.screen)
+        self.settingsButton = Text(1920 / 2, 1080 - 500, "settingsButton",
+                                   self.buttonsFont, self.primarTextColor, self.secondTextColor, "Settings", self.screen)
+        self.endButton = Text(1920 / 2, 1080 - 300, "endButton",
+                              self.buttonsFont, self.primarTextColor, self.secondTextColor, "End", self.screen)
 
-    def drawText(self, text, font, textColor, x, y):
-        img = font.render(text, True, textColor)
-        textRectangle = img.get_rect(center=(x, y))
-        self.screen.blit(img, textRectangle)
-        return textRectangle
+        self.allMenuButtons = (
+            self.singleplayerButton, self.multiplayerButton, self.settingsButton, self.endButton)
 
     def createMenu(self):
 
-        while self.menu:
-            self.clock.tick(10)
+        self.screen.fill((0, 0, 0))
+        
+        for menuButton in self.allMenuButtons:
+            menuButton.renderText()
+        
+        while True:
+            self.clock.tick(30)
+
             self.screen.fill((0, 0, 0))
-            self.singlplayerButton = self.drawText(
-                "Singlplayer", self.font, self.textColor, 1920 / 2, 1080 / 4)
-            self.multiplayerButton = self.drawText(
-                "Multiplayer", self.font, self.textColor, 1920 / 2, 1080 / 3)
-            self.settingsButton = self.drawText(
-                "Settings", self.font, self.textColor, 1920 / 2, 1080 / 2)
+
+            self.menuTitle.renderText()
+
+            mousePosition = pygame.mouse.get_pos()
+
+            for menuButton in self.allMenuButtons:
+                if menuButton.textRectangle.collidepoint(mousePosition):
+                    menuButton.renderSecondColorText()
+                else:
+                    menuButton.renderText()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.menu = False
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    mousePosition = pygame.mouse.get_pos()
-                    if self.singlplayerButton.collidepoint(mousePosition):
-                        self.menu = False
-                        return "singleplayer"
-                    if self.multiplayerButton.collidepoint(mousePosition):
-                        self.menu = False
-                        return "mutilplayer"
-
+                    for menuButton in self.allMenuButtons:
+                        if menuButton.textRectangle.collidepoint(mousePosition):
+                            return menuButton.name
+        
             pygame.display.update()
+            

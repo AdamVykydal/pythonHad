@@ -38,3 +38,9 @@ class Collisions:
                 self.score.printPoints()
                 fruit.generateFruit()
                 self.fruits.newFruit()
+    
+    def snakeAndServerFruit(self, foodTouch):
+        if foodTouch == 1:
+            self.sounds.playNomSound()
+            self.snake.addSnakePart()
+            self.score.addPoints()

@@ -6,3 +6,10 @@ class Fruits:
 
     def newFruit(self):
         self.fruitBasket.append(Fruit())
+    
+    def getFruitsCoords(self):
+        fruitsCoords = []
+        for fruit in self.fruitBasket:
+            fruitsCoords.append((fruit.coords.x, fruit.coords.y))
+        
+        return fruitsCoords
