@@ -11,9 +11,12 @@ class Client:
 
     def connectToServer(self):
         try:
-            (self.clientSocket.connect_ex((self.serverIp, self.serverPort)))
-        except ConnectionError as e:
-            print(e)
+            if (self.clientSocket.connect_ex((self.serverIp, self.serverPort))) == 0:
+                pass
+            else:
+                return False
+        except:
+            return False
        
     def sendData(self):
         try:

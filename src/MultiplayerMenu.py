@@ -19,7 +19,9 @@ class MutiplayerMenu:
                               self.hFont, self.primarTextColor, self.secondTextColor, "MULTIPLAYER", self.screen)
         self.ipBoxTitle = Text(1920 / 2, 1080 - 600, "IpBoxTitle",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "Enter server ip Adress:", self.screen)
-        self.play = Text(1920 / 2 - 300, 1080 - 200, "playButton",
+        self.connectingText = Text(1920 / 2, 1080 - 400, "ConnectingText",
+                              self.buttonsFont, self.primarTextColor, self.secondTextColor, "Trying to contact server...", self.screen)
+        self.play = Text(1920 / 2 - 300, 1080 - 200, "connectButton",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "Connect to server", self.screen)
         self.back = Text(1920 / 2 + 300, 1080 - 200, "backButton",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "Back", self.screen)
@@ -68,6 +70,10 @@ class MutiplayerMenu:
             
                     for menuButton in self.allMenuButtons:
                         if menuButton.textRectangle.collidepoint(mousePosition):
+                            if menuButton.name == "connectButton" and self.userText != "":
+                                self.connectingText.renderText()
+                                pygame.display.update()
+                            
                             return menuButton.name
 
                 if event.type == pygame.KEYDOWN and self.ipBoxActive:

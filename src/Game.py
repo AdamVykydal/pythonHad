@@ -25,7 +25,8 @@ class Game:
         self.loadResources = LoadResources()
         self.snakeTexture = self.loadResources.loadImage("snakeBody.png")
         self.enemySnakeTexture = self.loadResources.loadImage("enemySnakeBody.png")
-        self.fruitTexture = self.loadResources.loadImage("redApple.png")
+        self.fruitTexture1 = self.loadResources.loadImage("redApple.png")
+        self.fruitTexture2 = self.loadResources.loadImage("greenApple.png")
         self.snakeCoords = Coords(500, 500)
         self.renderer = Renderer()
         self.fruits = Fruits()
@@ -56,13 +57,12 @@ class Game:
         elif pressedButton == "multiplayerButton":
             while True:
                 pressedButton = self.multiplayerMenu.createMenu()
-                if pressedButton == "playButton" and self.multiplayerMenu.userText != "":
-                    try:
-                        self.connectToGameServer(self.multiplayerMenu.userText)
+                if pressedButton == "connectButton":
+                    
+                    serverConected = self.connectToGameServer(self.multiplayerMenu.userText)
+                    if serverConected:
                         self.multiplayergameLoop()
-                        break
-                    finally:
-                        pass
+                    
                 elif pressedButton == "backButton":
                     break
         elif pressedButton == "endButton":
@@ -72,8 +72,9 @@ class Game:
 
     def connectToGameServer(self, serverIp):
         self.client = Client(serverIp, 11111)
-        self.client.connectToServer()
-
+        serverConected = self.client.connectToServer()
+        return serverConected
+    
     def multiplayergameLoop(self):
         while self.running:
             self.screen.fill((0, 0, 0))
@@ -125,8 +126,8 @@ class Game:
         self.collisions.snakeAndWall()
 
     def singlplayerRenderer(self):
-        self.renderer.renderObjects(
-            self.screen, self.fruitTexture, self.fruits.fruitBasket
+        self.renderer.renderFruits(
+            self.screen, self.fruitTexture1, self.fruitTexture2, self.fruits.fruitBasket
         )
         self.renderer.renderObjects(
             self.screen, self.snakeTexture, self.snakeParts
@@ -135,7 +136,7 @@ class Game:
 
     def multiplayerRenderer(self):
         self.renderer.renderServerObject(
-            self.screen, self.fruitTexture, self.fruitbasket
+            self.screen, self.fruitTexture1, self.fruitbasket
         )
         self.renderer.renderObjects(
             self.screen, self.snakeTexture, self.snakeParts
