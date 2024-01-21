@@ -1,26 +1,27 @@
 from Sounds import Sounds
 
 class Collisions:
-    def __init__(self, snakeHead, snake, fruits, score, game):
+    def __init__(self, snakeHead, snake, fruits, score, game, screenSize):
         self.snakeHead = snakeHead
         self.snake = snake
         self.score = score
         self.game = game
         self.fruits = fruits
+        self.screenSize = screenSize
         self.sounds = Sounds()
 
     def snakeAndWall(self):
-        if self.snakeHead.coords.x > 1900:
+        if self.snakeHead.coords.x > self.screenSize.width - 20:
             self.snakeHead.coords.x = 0
             return
         elif self.snakeHead.coords.x < 0:
-            self.snakeHead.coords.x = 1900
+            self.snakeHead.coords.x = self.screenSize.width - 20
             return
-        elif self.snakeHead.coords.y > 1060:
+        elif self.snakeHead.coords.y > self.screenSize.height - 20:
             self.snakeHead.coords.y = 0
             return
         elif self.snakeHead.coords.y < 0:
-            self.snakeHead.coords.y = 1060
+            self.snakeHead.coords.y = self.screenSize.height - 20
             return
 
     def snakeAndTail(self):

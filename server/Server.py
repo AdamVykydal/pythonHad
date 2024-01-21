@@ -20,6 +20,7 @@ class Server:
         self.clientsSnakesCoords = [[(0, 0)], [(0, 0)]]
         self.serverGameLogick = ServerGameLogick(self.clientsSnakesCoords, self.serverScore)
         self.fruitCoords = [(0, 0)]
+        self.playersReady = [0, 0]
 
         print(f"Server is listening on {self.serverIp}:{self.serverPort}")
 
@@ -33,7 +34,7 @@ class Server:
             self.connectedClients += 1
             return True
 
-    def receiveData(self, clientSocket, clientIp, threadId):
+    def receiveGameData(self, clientSocket, clientIp, threadId):
         try:
             while True:
                 data = clientSocket.recv(4000)
@@ -46,7 +47,7 @@ class Server:
                 
                 collistionsInfo, self.fruitCoords = self.serverGameLogick.process(threadId)
                 
-                self.sendData(clientSocket, threadId, collistionsInfo)
+                self.sendGameData(clientSocket, threadId, collistionsInfo)
 
         except Exception as e:
             print(f"{clientIp}: {e}")
@@ -55,7 +56,7 @@ class Server:
                 self.connectedClients -= 1
             clientSocket.close()
 
-    def sendData(self, clientSocket, threadId, collistionsInfo):
+    def sendGameData(self, clientSocket, threadId, collistionsInfo):
 
         print([self.serverScore.score])
         try:
@@ -77,16 +78,35 @@ class Server:
 
                 if not self.handleClient(clientIp):
                     continue
-
-                clientHandler = threading.Thread(
-                    target=self.receiveData, args=(clientSocket, clientIp, threadId))
+                
+                clientHandler = threading.Thread(target=self.gameMenuConnections, args=(clientSocket, clientIp, threadId))
                 clientHandler.start()
                 threadId += 1
 
         except KeyboardInterrupt:
             print("Server stopped.")
 
-    
+    def gameMenuConnections(self, clientSocket, clientIp, threadId):
+        while True:
+            data = clientSocket.recv(4000)
+            data = self.clientsSnakesCoords[threadId] = pickle.loads(data)
+            print(clientIp, ":",data)
+                
+            self.playersReady[threadId] = data
+            clientSocket.send(pickle.dumps(self.playersReady))
+            print(self.playersReady)
+            print(threadId)
+            if self.playersReady == [1, 1]:
+                print("aoikfjasdfhjasihfzhuasfzuhsazhufhu")
+                print("aoikfjasdfhjasihfzhuasfzuhsazhufhu")
+                print("aoikfjasdfhjasihfzhuasfzuhsazhufhu")
+                print("aoikfjasdfhjasihfzhuasfzuhsazhufhu")
+                print("aoikfjasdfhjasihfzhuasfzuhsazhufhu")
+                print("aoikfjasdfhjasihfzhuasfzuhsazhufhu")
+
+                self.receiveGameData(clientSocket,clientIp,threadId)
+
+
     def getLocalIp(self):
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
