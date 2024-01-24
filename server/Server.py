@@ -18,8 +18,12 @@ class Server:
         self.lock = threading.Lock()
         self.serverScore = ServerScore()
         self.clientsSnakesCoords = [[(0, 0)], [(0, 0)]]
-        self.serverGameLogick = ServerGameLogick(self.clientsSnakesCoords, self.serverScore)
+        self.serverGameLogick = None
         self.fruitCoords = [(0, 0)]
+        self.playersReady = [0, 0]
+        self.playing = 0
+        self.threadIdForNextCandidate = 0
+        self.allThreadsIds = []
 
         print(f"Server is listening on {self.serverIp}:{self.serverPort}")
 
@@ -33,60 +37,107 @@ class Server:
             self.connectedClients += 1
             return True
 
-    def receiveData(self, clientSocket, clientIp, threadId):
+    def receiveGameData(self, clientSocket, clientIp, threadId):
+        self.serverGameLogick = ServerGameLogick(self.clientsSnakesCoords, self.serverScore)
         try:
-            while True:
-                data = clientSocket.recv(4000)
+            while self.playing:
+                data = clientSocket.recv(1024)
                 if not data:
                     break
-
                 self.clientsSnakesCoords[threadId] = pickle.loads(data)
-                print(
-                    f"Received data: {clientIp}, {self.clientsSnakesCoords[threadId]}")
+                if self.clientsSnakesCoords[threadId] == 1:
+                    self.clientsSnakesCoords[threadId] = [(20, 20)]
                 
-                collistionsInfo, self.fruitCoords = self.serverGameLogick.process(threadId)
+                print( f"Received data: {clientIp}, {self.clientsSnakesCoords[threadId]}")
                 
-                self.sendData(clientSocket, threadId, collistionsInfo)
+                gameIsFinished, collistionsInfo, playTime, self.fruitCoords = self.serverGameLogick.process(threadId)
+                
+                if gameIsFinished:
+                    self.playing = False
+                
+                self.sendGameData(clientSocket, threadId, collistionsInfo, playTime)
 
         except Exception as e:
-            print(f"{clientIp}: {e}")
-        finally:
+            print(e)
+            self.fixDisconectedThreadId(threadId)
+            clientSocket.close()
+            self.playing = False
+            self.serverGameLogick.restartgame()
             with self.lock:
                 self.connectedClients -= 1
-            clientSocket.close()
+            return
+            
+    def sendGameData(self, clientSocket, threadId, collistionsInfo, playTime):
 
-    def sendData(self, clientSocket, threadId, collistionsInfo):
-
-        print([self.serverScore.score])
         try:
             if threadId == 0:
-                clientSocket.send(pickle.dumps([collistionsInfo] + [self.serverScore.score] + [self.clientsSnakesCoords[1]] + [self.fruitCoords]))
+                clientSocket.send(pickle.dumps([int(self.playing)] + [collistionsInfo] + [playTime] + [self.serverScore.score] + [self.clientsSnakesCoords[1]] + [self.fruitCoords]))
             else:
-                clientSocket.send(pickle.dumps([collistionsInfo] + [list(reversed(self.serverScore.score))] + [self.clientsSnakesCoords[0]] + [self.fruitCoords]))
+                clientSocket.send(pickle.dumps([int(self.playing)] + [collistionsInfo] + [playTime] + [list(reversed(self.serverScore.score))] + [self.clientsSnakesCoords[0]] + [self.fruitCoords]))
 
         except Exception as e:
-            print(f"Error sending data: {e}")
+            print(e)
+            self.fixDisconectedThreadId(threadId)
             clientSocket.close()
-
+            self.playing = False
+            self.serverGameLogick.restartgame()
+            with self.lock:
+                self.connectedClients -= 1
+            return
+        
     def start(self):
         try:
-            threadId = 0
             while True:
                 clientSocket, clientIp = self.serverSocket.accept()
                 print(f"{clientIp} is trying to connect")
 
                 if not self.handleClient(clientIp):
                     continue
-
-                clientHandler = threading.Thread(
-                    target=self.receiveData, args=(clientSocket, clientIp, threadId))
+                
+                threadIdGuess = 0
+                while True:
+                    print(self.allThreadsIds)
+                    print(threadIdGuess)
+                    if threadIdGuess not in self.allThreadsIds:
+                        self.allThreadsIds.append(threadIdGuess)
+                        threadId = threadIdGuess
+                        break
+                    threadIdGuess =+ 1   
+                
+                clientHandler = threading.Thread(target=self.gameMenuConnections, args=(clientSocket, clientIp, threadId))
                 clientHandler.start()
-                threadId += 1
+                
 
         except KeyboardInterrupt:
             print("Server stopped.")
 
-    
+    def gameMenuConnections(self, clientSocket, clientIp, threadId):
+        while True:
+            try:
+                print("thrredId=", threadId)
+                data = clientSocket.recv(1024)
+            
+                self.playersReady[threadId] = pickle.loads(data)
+
+                if self.playersReady[threadId] != 0 and self.playersReady[threadId] != 1:
+                    self.playersReady[threadId] = 0
+                
+                print(clientIp, ":", self.playersReady[threadId])
+                
+                clientSocket.send(pickle.dumps(self.playersReady))
+                if self.playersReady == [1, 1]:
+                    self.playing = True
+                    self.receiveGameData(clientSocket, clientIp, threadId)
+                    self.playersReady = [0, 0]
+            
+            except Exception as e:
+                print(e)
+                self.fixDisconectedThreadId(threadId)
+                clientSocket.close()
+                with self.lock:
+                    self.connectedClients -= 1
+                return
+                
     def getLocalIp(self):
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -97,8 +148,9 @@ class Server:
         except socket.error as e:
             print("Nelze získat lokální IP adresu:", e)
             return None
-
-
+    
+    def fixDisconectedThreadId(self, threadId):
+        self.allThreadsIds.remove(threadId)
 
 server = Server()
 server.start()

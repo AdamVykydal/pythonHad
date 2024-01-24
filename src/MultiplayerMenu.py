@@ -5,32 +5,33 @@ from InputBox import InputBox
 
 
 class MutiplayerMenu:
-    def __init__(self, screen):
+    def __init__(self, screen, screenSize):
         self.buttonsFont = pygame.font.SysFont("arialBlack", 40)
         self.hFont = pygame.font.SysFont("arialBlack", 80, bold=True)
         self.primarTextColor = (255, 255, 255)
         self.secondTextColor = (50, 0, 205)
         self.clock = pygame.time.Clock()
         self.screen = screen
+        self.screenSize = screenSize
         self.menu = True
         self.userText = ""
         self.ipBoxActive = False
-        self.menuTitle = Text(1920 / 2, 1080 - 850, "multiplayerMenuTitle",
+        self.menuTitle = Text(screenSize.width / 2, screenSize.height - 850, "multiplayerMenuTitle",
                               self.hFont, self.primarTextColor, self.secondTextColor, "MULTIPLAYER", self.screen)
-        self.ipBoxTitle = Text(1920 / 2, 1080 - 600, "IpBoxTitle",
+        self.ipBoxTitle = Text(screenSize.width / 2, screenSize.height - 600, "IpBoxTitle",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "Enter server ip Adress:", self.screen)
-        self.connectingText = Text(1920 / 2, 1080 - 400, "ConnectingText",
+        self.connectingText = Text(screenSize.width / 2, screenSize.height - 400, "ConnectingText",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "Trying to contact server...", self.screen)
-        self.play = Text(1920 / 2 - 300, 1080 - 200, "connectButton",
+        self.play = Text(screenSize.width / 2 - 300, screenSize.height - 200, "connectButton",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "Connect to server", self.screen)
-        self.back = Text(1920 / 2 + 300, 1080 - 200, "backButton",
+        self.back = Text(screenSize.width / 2 + 300, screenSize.height - 200, "backButton",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "Back", self.screen)
-        self.ipBox = InputBox(1920 / 2, 1080 - 500, "Ip",
+        self.ipBox = InputBox(screenSize.width / 2, screenSize.height - 500, "Ip",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, self.screen, 10, 10)
         
         self.allMenuButtons = (self.play, self.back)
 
-    def createMenu(self):
+    def goMenu(self):
 
         for menuButton in self.allMenuButtons:
             menuButton.renderText()

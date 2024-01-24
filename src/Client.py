@@ -15,28 +15,52 @@ class Client:
                 pass
             else:
                 return False
+            return True
         except:
             return False
        
-    def sendData(self):
+    def sendSnakeData(self):
+        print("snakeSending:", self.snakePartsToSend)
         try:
             self.clientSocket.send(pickle.dumps(self.snakePartsToSend))
         except socket.error as e:
             print(f"sending data error {e}")
 
-    def reciveData(self):
+    def sendMenuData(self, menuData):
+        try:
+            print("menuSending:", menuData)
+            self.clientSocket.send(pickle.dumps(menuData))
+        except socket.error as e:
+            print(f"sending data error {e}")
+
+    def reciveGameData(self):
         try:
             data = self.clientSocket.recv(1024)
+            if not data:
+                self.sendSnakeData()
+                data = self.clientSocket.recv(1024)
             data = pickle.loads(data)
             print(f"Received data: {data}")
-            return data[0], data[1], data[2], data[3]
+            return bool(data[0]), data[1], data[2], data[3], data[4], data[5]
 
         except pickle.PickleError as e:
             print(e)
             self.clientSocket.close()
 
+    def reciveMenuData(self):
+        try:
+            data = self.clientSocket.recv(1024)
+            data = pickle.loads(data)
+            print(f"Received data: {data}")
+            return data
+
+        except pickle.PickleError as e:
+            print(e)
+            self.clientSocket.close()
+    
     def prepareDataForSend(self, snakeParts):
         self.snakePartsToSend = []
         for snakePart in snakeParts:
             self.snakePartsToSend.append(
                 (snakePart.coords.x, snakePart.coords.y))
+        

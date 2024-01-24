@@ -4,7 +4,8 @@ from Text import Text
 
 
 class GameStartMenu:
-    def __init__(self, screen):
+    def __init__(self, screen, screenSize):
+        self.screenSize = screenSize
         self.buttonsFont = pygame.font.SysFont("arialBlack", 40)
         self.hFont = pygame.font.SysFont("arialBlack", 80, bold=True)
         self.primarTextColor = (255, 255, 255)
@@ -12,28 +13,28 @@ class GameStartMenu:
         self.clock = pygame.time.Clock()
         self.screen = screen
         self.menu = True
-        self.objectsUpdate = ()
-        self.menuTitle = Text(1920 / 2, 1080 - 850, "menuTitle",
+
+        self.menuTitle = Text(self.screenSize.width / 2, self.screenSize.height - 850, "menuTitle",
                               self.hFont, self.primarTextColor, self.secondTextColor, "SNAKE", self.screen)
-        self.singleplayerButton = Text(1920 / 2, 1080 - 700, "singleplayerButton",
+        self.singleplayerButton = Text(self.screenSize.width / 2, self.screenSize.height - 700, "singleplayerButton",
                                        self.buttonsFont, self.primarTextColor, self.secondTextColor, "Singleplayer", self.screen)
-        self.multiplayerButton = Text(1920 / 2, 1080 - 600, "multiplayerButton",
+        self.multiplayerButton = Text(self.screenSize.width / 2, self.screenSize.height - 600, "multiplayerButton",
                                       self.buttonsFont, self.primarTextColor, self.secondTextColor, "Multiplayer", self.screen)
-        self.settingsButton = Text(1920 / 2, 1080 - 500, "settingsButton",
+        self.settingsButton = Text(self.screenSize.width / 2, self.screenSize.height - 500, "settingsButton",
                                    self.buttonsFont, self.primarTextColor, self.secondTextColor, "Settings", self.screen)
-        self.endButton = Text(1920 / 2, 1080 - 300, "endButton",
+        self.endButton = Text(self.screenSize.width / 2, self.screenSize.height - 300, "endButton",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "End", self.screen)
 
         self.allMenuButtons = (
             self.singleplayerButton, self.multiplayerButton, self.settingsButton, self.endButton)
 
-    def createMenu(self):
+    def goMenu(self):
 
         self.screen.fill((0, 0, 0))
-        
+
         for menuButton in self.allMenuButtons:
             menuButton.renderText()
-        
+
         while True:
             self.clock.tick(30)
 
@@ -57,6 +58,7 @@ class GameStartMenu:
                     for menuButton in self.allMenuButtons:
                         if menuButton.textRectangle.collidepoint(mousePosition):
                             return menuButton.name
-        
+
             pygame.display.update()
             
+
