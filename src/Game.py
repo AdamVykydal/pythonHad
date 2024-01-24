@@ -12,7 +12,7 @@ from Client import Client
 from Coords import Coords
 from GameStartMenu import GameStartMenu
 from MultiplayerMenu import MutiplayerMenu
-from Counter import Counter
+from InfoBoard import GameInfoBoard
 from LoadResources import LoadResources
 from ScreenSize import ScreenSize
 from GameRoomMenu import GameRoomMenu
@@ -50,11 +50,14 @@ class Game:
         self.gameStartMenu = GameStartMenu(self.screen, self.screenSize)
         self.multiplayerMenu = MutiplayerMenu(self.screen, self.screenSize)
         self.gameRoomMenu = GameRoomMenu(self.screen, self.screenSize)
-        self.counter = Counter(self.screen, self.screenSize)
+        self.gameInfoBoard = GameInfoBoard(self.screen, self.screenSize)
         self.collisionsInfoFromServer = [0,0,0]
         self.multiplayerScore = [0,0]
         self.startTime = time.time()
         self.currentTime = 0
+        self.snake.addSnakePart()
+        self.running = False
+        self.playTime = 0
         
     def run(self):
 
@@ -72,6 +75,8 @@ class Game:
                         while True:
                             pressedButton = self.gameRoomMenu.goMenu(self.client)
                             if pressedButton == "start":
+                                self.running = True
+                                self.clearMultiplayer()
                                 self.multiplayergameLoop()
                             elif pressedButton == "leaveLobbyButton":
                                 #disconnect
@@ -90,6 +95,12 @@ class Game:
         serverConected = self.client.connectToServer()
         return serverConected
     
+    def clearMultiplayer(self):
+        self.snakeHead.coords = Coords(500,500)
+        self.snakeHead.direction = self.snakeHead.directionRight
+        self.snake.restartSnake(self.snakeHead)
+        self.fruits.emptyFruitBasket()
+        
     def multiplayergameLoop(self):
         while self.running:
             self.screen.fill((0, 0, 0))
@@ -118,22 +129,20 @@ class Game:
 
             pygame.display.update()
             
-            
             self.clock.tick(60)
 
     def networking(self):
         self.client.prepareDataForSend(self.snakeParts)
         self.client.sendSnakeData()
-        self.collisionsInfoFromServer, self.multiplayerScore, self.enemySnakeParts, self.fruitbasket = self.client.reciveGameData()
-
+        self.running, self.collisionsInfoFromServer, self.playTime, self.multiplayerScore, self.enemySnakeParts, self.fruitbasket = self.client.reciveGameData()
+        
+    
     def handleEventsSingleplayer(self):
         self.currentTime = time.time()
-        #if self.snakeHead.coords.x % 20 == 0 and self.snakeHead.coords.y % 20 == 0:
         if self.currentTime - self.startTime >= 0.09:
             self.gameEvents.keyEvents()
-        
-        self.collisions.snakeAndFruit()
-        self.collisions.snakeAndTail()
+            self.collisions.snakeAndFruit()
+            self.collisions.snakeAndTail()
 
     def handleEventsMultiplayer(self):
         self.currentTime = time.time()
@@ -157,7 +166,7 @@ class Game:
         self.renderer.renderSnake(
             self.screen, self.snakeTexture, self.snakeParts
         )
-        self.counter.renderCounter(str(self.score.points))
+        self.gameInfoBoard.renderCounter(str(self.score.points))
 
     def multiplayerRenderer(self):
         self.renderer.renderServerObject(
@@ -169,4 +178,5 @@ class Game:
         self.renderer.renderServerObject(
             self.screen, self.enemySnakeTexture, self.enemySnakeParts
         )
-        self.counter.renderMultiplayerCouter(self.multiplayerScore)
+        self.gameInfoBoard.renderMultiplayerCouter(self.multiplayerScore)
+        self.gameInfoBoard.renderMultiplayerClock(self.playTime)

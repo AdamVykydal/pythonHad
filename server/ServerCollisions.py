@@ -29,7 +29,7 @@ class ServerCollisions:
         for enemySnakePart in self.clientsSnakesCoords[enemyThreadId]:
 
             if snakeHeadCoords[0] == enemySnakePart:
-                self.serverScore.subtractScore(threadId, 10)
+                self.serverScore.subtractScore(threadId, 1)
                 return 1
         return 0
 
@@ -40,7 +40,7 @@ class ServerCollisions:
         for snakePart in snakeCoords[1:]:
 
             if snakeHeadCoords[0] == snakePart:
-                self.serverScore.subtractScore(threadId, 5)
+                self.serverScore.subtractScore(threadId, 1)
                 return 1
         return 0
     

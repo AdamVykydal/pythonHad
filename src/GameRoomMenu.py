@@ -12,7 +12,6 @@ class GameRoomMenu:
         self.clock = pygame.time.Clock()
         self.screen = screen
         self.lobbyName = "ahoj"
-        self.ready = 0
         self.playersReady = [0,0]
         
         self.roomTitle = Text(self.screenSize.width / 2, self.screenSize.height - 850, "roomtitle",
@@ -28,10 +27,11 @@ class GameRoomMenu:
 
         self.leaveButton
 
-    def goMenu(self , client):
+    def goMenu(self, client):
         self.screen.fill((0, 0, 0))
+        
+        self.readyButton.pressed = 0
 
-       
         self.leaveButton.renderText()
     
         self.readyButton.renderText()
@@ -73,7 +73,7 @@ class GameRoomMenu:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     
                     if self.leaveButton.textRectangle.collidepoint(mousePosition):
-                        return self.leaveButton.name, self.ready
+                        return self.leaveButton.name
                     
                     if self.readyButton.textRectangle.collidepoint(mousePosition) and self.readyButton.pressed:
                         self.readyButton.pressed = 0
@@ -82,11 +82,11 @@ class GameRoomMenu:
                         self.readyButton.pressed = 1
                         #return self.readyButton.name, self.readyButton.pressed
             
-            if self.playersReady == [1, 1]:
-                return "start"
-            
             client.sendMenuData(self.readyButton.pressed)
             self.playersReady = client.reciveMenuData()
             
+            if self.playersReady == [1, 1]:
+                return "start"
+           
             pygame.display.update()
             

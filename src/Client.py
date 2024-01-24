@@ -20,6 +20,7 @@ class Client:
             return False
        
     def sendSnakeData(self):
+        print("snakeSending:", self.snakePartsToSend)
         try:
             self.clientSocket.send(pickle.dumps(self.snakePartsToSend))
         except socket.error as e:
@@ -27,6 +28,7 @@ class Client:
 
     def sendMenuData(self, menuData):
         try:
+            print("menuSending:", menuData)
             self.clientSocket.send(pickle.dumps(menuData))
         except socket.error as e:
             print(f"sending data error {e}")
@@ -34,13 +36,12 @@ class Client:
     def reciveGameData(self):
         try:
             data = self.clientSocket.recv(1024)
-            print(data)
             if not data:
                 self.sendSnakeData()
                 data = self.clientSocket.recv(1024)
             data = pickle.loads(data)
             print(f"Received data: {data}")
-            return data[0], data[1], data[2], data[3]
+            return bool(data[0]), data[1], data[2], data[3], data[4], data[5]
 
         except pickle.PickleError as e:
             print(e)

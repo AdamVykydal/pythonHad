@@ -5,3 +5,7 @@ class ServerScore:
         self.score[threadId] += points
     def subtractScore(self, threadId, points):
         self.score[threadId] -= points
+    def checkScore(self, threadId):
+        if self.score[threadId] <= -500:
+           return True
+        return False

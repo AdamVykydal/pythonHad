@@ -16,3 +16,4 @@ class Renderer:
         for coords in coordsList:
             rectangle = texture.get_rect(topleft=coords)
             screen.blit(texture, rectangle)
+    

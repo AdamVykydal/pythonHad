@@ -22,3 +22,7 @@ class Snake():
 
     def getSnakeParts(self):
         return self.snakeParts
+    def restartSnake(self, snakeHead):
+        self.snakeParts = []
+        self.snakeParts.append(snakeHead)
+        self.snakePartIndex = None
