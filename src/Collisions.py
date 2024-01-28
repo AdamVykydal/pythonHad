@@ -25,9 +25,8 @@ class Collisions:
             return
 
     def snakeAndTail(self):
-        for snakePart in self.snake.snakeParts[2:]:
+        for snakePart in self.snake.parts[2:]:
             if self.snakeHead.coords.x == snakePart.coords.x and self.snakeHead.coords.y == snakePart.coords.y:
-                print("you lost with:", self.score.points, "points")
                 self.game.running = False
 
     def snakeAndFruit(self):
@@ -35,13 +34,13 @@ class Collisions:
             if self.snakeHead.coords.x == fruit.coords.x and self.snakeHead.coords.y == fruit.coords.y:
                 self.sounds.playNomSound()
                 self.snake.addSnakePart()
-                self.score.addPoints()
-                self.score.printPoints()
+                self.score.addScore(1)
                 fruit.generateFruit()
                 self.fruits.newFruit()
+
     
     def snakeAndServerFruit(self, foodTouch):
         if foodTouch == 1:
             self.sounds.playNomSound()
             self.snake.addSnakePart()
-            self.score.addPoints()
+            self.score.addScore(1)

@@ -13,9 +13,11 @@ class InputBox():
         self.boxRectangle = None
         self.w = w
         self.h = h
+        self.active = False
+        self.text = ""
 
-    def renderInputBox(self, text):
-        img = self.font.render(text, True, self.primarTextColor)
+    def renderInputBox(self):
+        img = self.font.render(self.text, True, self.primarTextColor)
         self.textRectangle = img.get_rect(center=(self.x, self.y))
         
         
@@ -25,8 +27,8 @@ class InputBox():
         self.screen.blit(img, (self.textRectangle.x, self.textRectangle.y))
         
     
-    def renderSecondColorInputBox(self, text):
-        img = self.font.render(text, True, self.secondTextColor)
+    def renderSecondColorInputBox(self, ):
+        img = self.font.render(self.text, True, self.secondTextColor)
         self.textRectangle = img.get_rect(center=(self.x, self.y))
        
         self.textRectangle.width = max(400,self.textRectangle.width +10)

@@ -1,19 +1,23 @@
 import sys
 import pygame
 from Text import Text
+from LoadResources import LoadResources
+from MenuConst import MenuConst
 
 
 class GameStartMenu:
     def __init__(self, screen, screenSize):
         self.screenSize = screenSize
-        self.buttonsFont = pygame.font.SysFont("arialBlack", 40)
-        self.hFont = pygame.font.SysFont("arialBlack", 80, bold=True)
-        self.primarTextColor = (255, 255, 255)
-        self.secondTextColor = (50, 0, 205)
+        self.menuConst = MenuConst()
+        self.buttonsFont = self.menuConst.normalFont()
+        self.hFont = self.menuConst.bigFont()
+        self.primarTextColor = self.menuConst.primaryColour()
+        self.secondTextColor = self.menuConst.secondaryColour()
         self.clock = pygame.time.Clock()
         self.screen = screen
         self.menu = True
-
+        self.loadResources = LoadResources()   
+        
         self.menuTitle = Text(self.screenSize.width / 2, self.screenSize.height - 850, "menuTitle",
                               self.hFont, self.primarTextColor, self.secondTextColor, "SNAKE", self.screen)
         self.singleplayerButton = Text(self.screenSize.width / 2, self.screenSize.height - 700, "singleplayerButton",
@@ -22,7 +26,7 @@ class GameStartMenu:
                                       self.buttonsFont, self.primarTextColor, self.secondTextColor, "Multiplayer", self.screen)
         self.settingsButton = Text(self.screenSize.width / 2, self.screenSize.height - 500, "settingsButton",
                                    self.buttonsFont, self.primarTextColor, self.secondTextColor, "Settings", self.screen)
-        self.endButton = Text(self.screenSize.width / 2, self.screenSize.height - 300, "endButton",
+        self.endButton = Text(self.screenSize.width / 2, self.screenSize.height - 400, "endButton",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "End", self.screen)
 
         self.allMenuButtons = (
@@ -36,16 +40,18 @@ class GameStartMenu:
             menuButton.renderText()
 
         while True:
+            
             self.clock.tick(30)
 
             self.screen.fill((0, 0, 0))
-
+            
+            
             self.menuTitle.renderText()
 
-            mousePosition = pygame.mouse.get_pos()
-
+            mousePosition = pygame.mouse.get_pos()   
+            
             for menuButton in self.allMenuButtons:
-                if menuButton.textRectangle.collidepoint(mousePosition):
+                if menuButton.rectangle.collidepoint(mousePosition):
                     menuButton.renderSecondColorText()
                 else:
                     menuButton.renderText()
@@ -56,7 +62,7 @@ class GameStartMenu:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for menuButton in self.allMenuButtons:
-                        if menuButton.textRectangle.collidepoint(mousePosition):
+                        if menuButton.rectangle.collidepoint(mousePosition):
                             return menuButton.name
 
             pygame.display.update()

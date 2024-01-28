@@ -52,7 +52,7 @@ class Client:
             data = self.clientSocket.recv(1024)
             data = pickle.loads(data)
             print(f"Received data: {data}")
-            return data
+            return data[0], data[1], data[2], data[3]
 
         except pickle.PickleError as e:
             print(e)

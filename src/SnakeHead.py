@@ -4,11 +4,11 @@ class SnakeHead(SnakeBody):
     def __init__(self, coords):
         super().__init__(coords)
         self.speed = 20
-        self.direction = (self.speed, 0)
         self.directionUp = (0, -self.speed)
         self.directionLeft = (-self.speed, 0)
         self.directionDown = (0, self.speed)
         self.directionRight = (self.speed, 0)
+        self.direction = self.directionRight
 
     def setDirectionUp(self):
         if self.direction != self.directionDown:

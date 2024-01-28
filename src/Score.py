@@ -2,8 +2,13 @@ class Score:
     def __init__(self):
         self.points = 0
 
-    def addPoints(self):
-        self.points += 1
-
-    def printPoints(self):
-        print(self.points)
+    def addScore(self, points):
+        self.points += points
+    
+    def subtractScore(self,  points):
+        self.points -= points
+    
+    def checkScore(self):
+        if self.points <= -500:
+           return True
+        return False
