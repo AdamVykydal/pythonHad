@@ -1,5 +1,5 @@
 import random
-from Coords import Coords
+from gameFunctions.Coords import Coords
 
 class Fruit:
     def __init__(self):

@@ -1,2 +1,0 @@
-class DataTransferException(Exception):
-    pass

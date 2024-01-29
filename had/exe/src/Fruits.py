@@ -1,4 +1,4 @@
-from Fruit import Fruit
+from gameFunctions.Fruit import Fruit
 
 class Fruits:
     def __init__(self):
