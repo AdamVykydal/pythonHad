@@ -34,14 +34,37 @@ class GameRoomMenu:
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "Ready", self.screen)
         self.gameSettingsText = Text(self.screenSize.width / 2 + 700, self.screenSize.height - 800, "gameSettings",
                                       self.buttonsFont, self.primarTextColor, self.secondTextColor, "Play options:", self.screen)
-        self.playTimeText = Text(self.screenSize.width / 2 + 700, self.screenSize.height - 600, "playTime",
+        
+        self.playTimeHeader = Text(self.screenSize.width / 2 + 700, self.screenSize.height - 700, "",
+                                      self.buttonsFont, self.primarTextColor, self.secondTextColor, "Play time:", self.screen)
+        self.playTimeText = Text(self.screenSize.width / 2 + 700, self.screenSize.height - 650, "",
                                       self.buttonsFont, self.primarTextColor, self.secondTextColor, "", self.screen)
-        self.playTimePlusButton = Text(self.screenSize.width / 2 + 800, self.screenSize.height - 600, "playTimePlus",
+        self.playTimePlusButton = Text(self.screenSize.width / 2 + 800, self.screenSize.height - 650, "",
                                       self.plusMinusFont, self.primarTextColor, self.secondTextColor, "+", self.screen)
-        self.playTimeMinusButton = Text(self.screenSize.width / 2 + 600, self.screenSize.height - 600, "playTimeMinus",
+        self.playTimeMinusButton = Text(self.screenSize.width / 2 + 600, self.screenSize.height - 650, "",
                                       self.plusMinusFont, self.primarTextColor, self.secondTextColor, "-", self.screen)
         
-        self.twoColorMenuButtons = (self.leaveButton, self.playTimePlusButton, self.playTimeMinusButton)
+        self.winConditionHeader = Text(self.screenSize.width / 2 + 700, self.screenSize.height - 550, "",
+                                      self.buttonsFont, self.primarTextColor, self.secondTextColor, "Win condition:", self.screen)
+        self.winConditionText = Text(self.screenSize.width / 2 + 700, self.screenSize.height - 500, "",
+                                      self.buttonsFont, self.primarTextColor, self.secondTextColor, "", self.screen)
+        self.winConditionPlusButton = Text(self.screenSize.width / 2 + 800, self.screenSize.height - 500, "",
+                                      self.plusMinusFont, self.primarTextColor, self.secondTextColor, "+", self.screen)
+        self.winConditioneMinusButton = Text(self.screenSize.width / 2 + 600, self.screenSize.height - 500, "",
+                                      self.plusMinusFont, self.primarTextColor, self.secondTextColor, "-", self.screen)
+        
+        self.lossConditionHeader = Text(self.screenSize.width / 2 + 700, self.screenSize.height - 400, "",
+                                      self.buttonsFont, self.primarTextColor, self.secondTextColor, "loss condition:", self.screen)
+        self.lossConditionText = Text(self.screenSize.width / 2 + 700, self.screenSize.height - 350, "",
+                                      self.buttonsFont, self.primarTextColor, self.secondTextColor, "", self.screen)
+        self.lossConditionPlusButton = Text(self.screenSize.width / 2 + 800, self.screenSize.height - 350, "",
+                                      self.plusMinusFont, self.primarTextColor, self.secondTextColor, "+", self.screen)
+        self.lossConditionMinusButton = Text(self.screenSize.width / 2 + 600, self.screenSize.height - 350, "",
+                                      self.plusMinusFont, self.primarTextColor, self.secondTextColor, "-", self.screen)
+        
+        
+        self.twoColorMenuButtons = (self.leaveButton, self.playTimePlusButton, self.playTimeMinusButton, self.winConditioneMinusButton, self.winConditionPlusButton, self.lossConditionMinusButton, self.lossConditionPlusButton)
+        self.staticText =(self.roomTitle, self.playTimeHeader, self.winConditionHeader, self.lossConditionHeader, self.gameSettingsText)
 
     def goMenu(self, client, playerName, roomName):
         self.screen.fill((0, 0, 0))
@@ -51,9 +74,6 @@ class GameRoomMenu:
         for button in self.twoColorMenuButtons:
             button.renderText()
     
-        self.readyButton.renderText()
-
-        
         while True:
             self.clock.tick(30)
 
@@ -63,7 +83,11 @@ class GameRoomMenu:
 
             self.playTimeText.renderDynamicText(self.gameOptions[0])
             
-            self.gameSettingsText.renderText()
+            #pygame.draw.rect(self.screen, self.primarTextColor, (1400, 325, 500, 500), 2)
+            
+            
+            for text in self.staticText:
+                text.renderText()
             
             if self.playersReady[0] == 1:
                 self.snakeText1.renderDynamicText((str(self.playerNames[0]) + ": Ready"))

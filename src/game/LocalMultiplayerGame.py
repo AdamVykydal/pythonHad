@@ -50,7 +50,7 @@ class LocalMultiplayerGame:
         self.startTime = time.time()
         self.currentTime = 0
         self.events = None
-        self.gameTime = GameTime([100, 0, 0])
+        self.gameTime = GameTime([200, 0, 0])
         self.remainingTime = 0
         self.escPauseMenu = EscPauseMenu(self.screen, self.screenSize, self.gameTime)
         

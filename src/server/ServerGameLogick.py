@@ -1,7 +1,7 @@
-import pygame
-from server.ServerCollisions import ServerCollisions
 from gameFunctions.GameTime import GameTime
 from gameFunctions.Fruits import Fruits
+from server.ServerCollisions import ServerCollisions
+
 
 class ServerGameLogick:
     def __init__(self, clientsSnakes, serverScore, gameOptions):

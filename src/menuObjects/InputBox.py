@@ -19,8 +19,7 @@ class InputBox():
     def renderInputBox(self):
         img = self.font.render(self.text, True, self.primarTextColor)
         self.textRectangle = img.get_rect(center=(self.x, self.y))
-        
-        
+    
         self.textRectangle.width = max(400,self.textRectangle.width +10)
         
         self.boxRectangle = pygame.draw.rect(self.screen, self.primarTextColor, (1920 /2 - self.textRectangle.width /2, self.textRectangle.y, self.textRectangle.width, self.textRectangle.height ), 2)

@@ -45,6 +45,7 @@ class GameStartMenu:
 
             self.screen.fill((0, 0, 0))
             
+    
             
             self.menuTitle.renderText()
 

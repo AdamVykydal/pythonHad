@@ -62,10 +62,11 @@ class SingleplayerGame:
         self.currentTime = time.time()
         if self.currentTime - self.startTime >= 0.09:
             self.events = pygame.event.get()
+            self.running = self.escPauseMenu.checkIfEscIsPressed(self.events)
             self.gameEvents.keyEvents(self.events)
             self.collisions.snakeAndFruit()
             self.collisions.snakeAndTail()
-            self.running = self.escPauseMenu.checkIfEscIsPressed(self.events)
+            
 
     def update(self):
         if self.currentTime - self.startTime >= 0.09:

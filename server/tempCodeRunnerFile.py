@@ -1,0 +1,2 @@
+
+        #self.serverIp = self.getLocalIp()
