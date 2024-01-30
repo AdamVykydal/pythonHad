@@ -25,7 +25,7 @@ class Server:
         self.threadIdForNextCandidate = 0
         self.allThreadsIds = []
         self.playersNames = ["", ""]
-        self.gameOptions = [100, 0, 0]
+        self.gameOptions = [100, 50, -5]
 
         print(f"Server is listening on {self.serverIp}:{self.serverPort}")
 
@@ -102,11 +102,10 @@ class Server:
 
     def gameMenuConnections(self, clientSocket, clientIp, threadId):
         while True:
-            try:
+            #try:
                 data = clientSocket.recv(1024)
                 data = pickle.loads(data)
-                
-                print (data)
+            
                 self.playersReady[threadId] = data[0]
                 self.playersNames[threadId] = data[1]
                 gameOptionsChahnges = data[2]
@@ -122,14 +121,16 @@ class Server:
                 
                 clientSocket.send(pickle.dumps([threadId ,self.playersReady, self.playersNames, self.gameOptions]))
                 
+            #except Exception as e:
+                #print(e)
+                #self.diconectClient(threadId, clientSocket)   
+                
                 if self.playersReady == [1, 1]:
                     self.playing = True
                     self.receiveGameData(clientSocket, clientIp, threadId)
                     self.playersReady = [0, 0]
             
-            except Exception as e:
-                print(e)
-                self.diconectClient(threadId, clientSocket)
+            
                 
     def getLocalIp(self):
         try:

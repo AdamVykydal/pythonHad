@@ -23,9 +23,7 @@ class GameTime:
         elapsedTime = (currentTime - self.startTime) - (self.endMenuTime - self.menuTimeStart)
     
         if elapsedTime >= self.playTime:
-            print("ajaj")
             return True, 0 
         else:
             remainingTime = self.playTime - elapsedTime
-            print(remainingTime)
             return False, round(remainingTime)

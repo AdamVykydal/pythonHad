@@ -8,7 +8,7 @@ class Score:
     def subtractScore(self,  points):
         self.points -= points
     
-    def checkScore(self):
-        if self.points <= -500:
-           return True
-        return False
+    def checkScore(self, gameOptions):
+        if self.points >= gameOptions[1] or self.points <= gameOptions[2]:
+           return False
+        return True

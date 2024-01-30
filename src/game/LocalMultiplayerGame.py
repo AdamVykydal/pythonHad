@@ -15,7 +15,7 @@ from menu.EscPauseMenu import EscPauseMenu
 
 
 class LocalMultiplayerGame:
-    def __init__(self, screen, screenSize):
+    def __init__(self, screen, screenSize, gameOptions):
         self.running = True
         self.screen = screen
         self.screenSize = screenSize
@@ -50,9 +50,11 @@ class LocalMultiplayerGame:
         self.startTime = time.time()
         self.currentTime = 0
         self.events = None
-        self.gameTime = GameTime([200, 0, 0])
+        self.gameOptions = gameOptions
+        self.gameTime = GameTime(gameOptions)
         self.remainingTime = 0
         self.escPauseMenu = EscPauseMenu(self.screen, self.screenSize, self.gameTime)
+        
         
     def localMultiplayerGameLoop(self):
         self.gameTime.start()
@@ -82,7 +84,12 @@ class LocalMultiplayerGame:
             self.collisions2.snakeAndFruit()
             self.collisions2.snakeAndTail()
             self.collisions2.snakeAndSnake()
-            self.running = self.escPauseMenu.checkIfEscIsPressed(self.events)
+            if self.running:
+                self.running = self.escPauseMenu.checkIfEscIsPressed(self.events)
+            if self.running:
+                self.running = self.score.checkScore(self.gameOptions)
+            if self.running:
+                self.running = self.score2.checkScore(self.gameOptions)
     
         end, self.remainingTime = self.gameTime.check()
         

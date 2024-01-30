@@ -21,9 +21,10 @@ class ServerGameLogick:
     
     def process(self, threadId):
         self.gameFinished = False
-        self.gameFinished = self.serverScore.checkScore(threadId)
-        
-        self.gameFinished, self.playTime = self.serverGameTime.check()
+        if not self.gameFinished:  
+            self.gameFinished = self.serverScore.checkScore(threadId, self.gameOptions)
+        if not self.gameFinished:
+            self.gameFinished, self.playTime = self.serverGameTime.check()
        
         if self.gameFinished:
             self.restartgame()
@@ -33,7 +34,6 @@ class ServerGameLogick:
         snake = self.clientsSnakes[threadId]
         
         if  snake[0] != self.previousHeadPosition[threadId]:
-            print("done")
             self.previousHeadPosition[threadId] = snake[0]
             
             collistionsInfo[0] = self.serverCollisions.snakeAndFruit(threadId)

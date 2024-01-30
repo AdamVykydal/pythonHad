@@ -20,7 +20,7 @@ class GameRoomMenu:
         self.gameOptionsChanges = [0, 0, 0]
         self.playerId = None
 
-        self.gameOptions = [100, 0, 0]
+        self.gameOptions = [100, 50, -5]
         
         self.roomTitle = Text(self.screenSize.width / 2, self.screenSize.height - 850, "roomtitle",
                               self.hFont, self.primarTextColor, self.secondTextColor,"", self.screen)
@@ -63,7 +63,8 @@ class GameRoomMenu:
                                       self.plusMinusFont, self.primarTextColor, self.secondTextColor, "-", self.screen)
         
         
-        self.twoColorMenuButtons = (self.leaveButton, self.playTimePlusButton, self.playTimeMinusButton, self.winConditioneMinusButton, self.winConditionPlusButton, self.lossConditionMinusButton, self.lossConditionPlusButton)
+        self.twoColorMenuButtons = (self.leaveButton, self.playTimePlusButton, self.playTimeMinusButton, self.winConditioneMinusButton,
+                                    self.winConditionPlusButton, self.lossConditionMinusButton, self.lossConditionPlusButton)
         self.staticText =(self.roomTitle, self.playTimeHeader, self.winConditionHeader, self.lossConditionHeader, self.gameSettingsText)
 
     def goMenu(self, client, playerName, roomName):
@@ -80,8 +81,10 @@ class GameRoomMenu:
             self.screen.fill((0, 0, 0))
             
             self.roomTitle.renderDynamicText(roomName)
-
+            
             self.playTimeText.renderDynamicText(self.gameOptions[0])
+            self.winConditionText.renderDynamicText(self.gameOptions[1])
+            self.lossConditionText.renderDynamicText(self.gameOptions[2])
             
             #pygame.draw.rect(self.screen, self.primarTextColor, (1400, 325, 500, 500), 2)
             
@@ -135,6 +138,23 @@ class GameRoomMenu:
                     elif self.playTimeMinusButton.rectangle.collidepoint(mousePosition):
                         if self.gameOptions[0] > 10:
                             self.gameOptionsChanges[0] = -1
+                    
+                    elif self.winConditionPlusButton.rectangle.collidepoint(mousePosition):
+                        if self.gameOptions[1] < 500:
+                            self.gameOptionsChanges[1] = 1
+        
+                    elif self.winConditioneMinusButton.rectangle.collidepoint(mousePosition):
+                        if self.gameOptions[1] > 10:
+                            self.gameOptionsChanges[1] = -1
+                    
+                    elif self.lossConditionPlusButton.rectangle.collidepoint(mousePosition):
+                        if self.gameOptions[2] < -1:
+                            self.gameOptionsChanges[2] = 1
+                    
+                    elif self.lossConditionMinusButton.rectangle.collidepoint(mousePosition):
+                        if self.gameOptions[2] > -100:
+                            self.gameOptionsChanges[2] = -1
+            
             
             client.sendMenuData([self.readyButton.pressed, playerName, self.gameOptionsChanges])
             self.playerId, self.playersReady, self.playerNames, self.gameOptions= client.reciveMenuData()

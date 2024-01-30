@@ -1,5 +1,4 @@
 import sys
-import os
 import subprocess
 import pygame
 from game.Client import Client
@@ -11,6 +10,7 @@ from game.SingleplayerGame import SingleplayerGame
 from game.MultiplayerGame import MultiplayerGame
 from game.LocalMultiplayerGame import LocalMultiplayerGame
 from menu.MultiplayerMenu import MutiplayerMenu
+from menu.LocalGameRoomMenu import LocalGameRoomMenu
 
 
 
@@ -27,6 +27,7 @@ class Game:
         self.multiplayerConnectMenu = MutiplayerConnectMenu(self.screen, self.screenSize)
         self.gameRoomMenu = GameRoomMenu(self.screen, self.screenSize)
         self.multiplayerMenu = MutiplayerMenu(self.screen, self.screenSize)
+        self.localGameRoomMenu = LocalGameRoomMenu(self.screen, self.screenSize)
         self.client = None
 
     def run(self):
@@ -67,7 +68,6 @@ class Game:
                                             self.client)
                                     
                                     elif pressedButton == "leaveLobbyButton":
-                                        #self.client.sendMenuData(0)
                                         self.client.clientSocket.close()
                                         break
 
@@ -75,8 +75,15 @@ class Game:
                             break
                 
                 elif pressedButton == "localGameMenuButton":
-                    self.localMultiplayerGame = LocalMultiplayerGame(self.screen, self.screenSize)
-                    self.localMultiplayerGame.localMultiplayerGameLoop()
+                    while True:
+                        pressedButton = self.localGameRoomMenu.goMenu()
+                        
+                        if pressedButton == "playButton":
+                            self.localMultiplayerGame = LocalMultiplayerGame(self.screen, self.screenSize, self.localGameRoomMenu.gameOptions)
+                            self.localMultiplayerGame.localMultiplayerGameLoop()
+                        
+                        elif pressedButton == "backButton":
+                            break
                 
                 elif pressedButton == "backButton":
                     break
