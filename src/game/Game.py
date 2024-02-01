@@ -11,6 +11,8 @@ from game.MultiplayerGame import MultiplayerGame
 from game.LocalMultiplayerGame import LocalMultiplayerGame
 from menu.MultiplayerMenu import MutiplayerMenu
 from menu.LocalGameRoomMenu import LocalGameRoomMenu
+from menu.LocalMultiplayerGameResults import LocalMultiplayerGameResults
+from menu.SingleplayerGameResults import SingleplayerGameResults
 
 
 
@@ -28,7 +30,10 @@ class Game:
         self.gameRoomMenu = GameRoomMenu(self.screen, self.screenSize)
         self.multiplayerMenu = MutiplayerMenu(self.screen, self.screenSize)
         self.localGameRoomMenu = LocalGameRoomMenu(self.screen, self.screenSize)
+        self.singleplayerGameResult = None
+        self.localMultiplayerGameResults = None
         self.client = None
+        self.gameResults = None
 
     def run(self):
 
@@ -36,14 +41,19 @@ class Game:
 
         if pressedButton == "singleplayerButton":
             self.singleplayerGame = SingleplayerGame(self.screen, self.screenSize)
-            self.singleplayerGame.singlplayerGameLoop()
+            points, playTime = self.singleplayerGame.singlplayerGameLoop()
+            
+            self.singleplayerGameResult = SingleplayerGameResults(self.screen, self.screenSize)
+            self.singleplayerGameResult.goMenu(points, playTime)
+            
+            self.singleplayerGame = self.singleplayerGameResult = None
         
         elif pressedButton == "multiplayerButton":
             while True:
                 pressedButton = self.multiplayerMenu.goMenu()
                 
                 if pressedButton == "startServerMenuButton":
-                    subprocess.run(["start", "cmd", "/c", "python", "src\\Server.py"], shell=True, check=False)
+                    subprocess.run(["start", "cmd", "/c", "python", "src\Server.py"], shell=True, check=False)
                     
                 elif pressedButton == "connectToServerMenuButton":
                     while True:
@@ -80,8 +90,13 @@ class Game:
                         
                         if pressedButton == "playButton":
                             self.localMultiplayerGame = LocalMultiplayerGame(self.screen, self.screenSize, self.localGameRoomMenu.gameOptions)
-                            self.localMultiplayerGame.localMultiplayerGameLoop()
-                        
+                            gameResults, snake1Statistics, snake2Statistics = self.localMultiplayerGame.localMultiplayerGameLoop()
+                            
+                            self.localMultiplayerGameResults = LocalMultiplayerGameResults(self.screen, self.screenSize)
+                            self.localMultiplayerGameResults.goMenu(gameResults, snake1Statistics, snake2Statistics)
+
+                            self.localMultiplayerGame = self.localMultiplayerGameResults = None
+
                         elif pressedButton == "backButton":
                             break
                 

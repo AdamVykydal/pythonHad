@@ -32,6 +32,8 @@ class EscPauseMenu:
         while True:
             self.clock.tick(30)
 
+            self.screen.fill((0, 0, 0))
+           
             self.pauseText.renderText()
             self.escInfoText.renderText()
 

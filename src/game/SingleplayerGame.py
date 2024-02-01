@@ -11,7 +11,7 @@ from gameFunctions.Collisions import Collisions
 from gameFunctions.Coords import Coords
 from recources.LoadResources import LoadResources
 from menu.EscPauseMenu import EscPauseMenu
-from gameFunctions.GameTime import GameTime
+from gameFunctions.Stopwatch import Stopwatch
 
 
 class SingleplayerGame:
@@ -20,7 +20,7 @@ class SingleplayerGame:
         self.screen = screen
         self.screenSize = screenSize
         self.clock = pygame.time.Clock()
-        self.gameTime = GameTime([0,0,0])
+        self.gameTime = Stopwatch()
         self.snakeCoords = Coords(500, 500)
         self.snakeHead = SnakeHead(self.snakeCoords)
         self.renderer = Renderer()
@@ -45,6 +45,8 @@ class SingleplayerGame:
         self.escPauseMenu = EscPauseMenu(self.screen, self.screenSize, self.gameTime)
 
     def singlplayerGameLoop(self):
+        self.gameTime.start()
+        
         while self.running:
             self.screen.fill((0, 0, 0))
 
@@ -57,6 +59,8 @@ class SingleplayerGame:
             pygame.display.update()
 
             self.clock.tick(60)
+        
+        return str(self.score.points), str(self.gameTime.time)
 
     def handleEventsSingleplayer(self):
         self.currentTime = time.time()
@@ -75,6 +79,8 @@ class SingleplayerGame:
             self.startTime = time.time()
         
         self.collisions.snakeAndWall()
+
+        self.gameTime.check()
 
     def singlplayerRenderer(self):
         self.renderer.renderFruits(

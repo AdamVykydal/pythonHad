@@ -4,7 +4,6 @@ class GameTime:
     def __init__(self, gameOptions):
         self.startTime = 0
         self.playTime = int(gameOptions[0])
-        self.timeBeforeStop = 0
         self.menuTimeStart = 0
         self.endMenuTime = 0
     

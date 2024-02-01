@@ -17,7 +17,7 @@ class LocalGameRoomMenu:
         self.screen = screen
         self.gameOptions = [100, 50, -5]
         
-        self.roomTitle = Text(self.screenSize.width / 2, self.screenSize.height - 850, "roomtitle",
+        self.roomTitle = Text(self.screenSize.width / 2, self.screenSize.height - 850, "",
                               self.hFont, self.primarTextColor, self.secondTextColor,"Local game for two", self.screen)
         self.backButton = Text(self.screenSize.width / 2 + 300, self.screenSize.height - 200, "backButton",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "Back", self.screen)
@@ -54,7 +54,7 @@ class LocalGameRoomMenu:
         
         self.twoColorMenuButtons = (self.backButton, self.playTimePlusButton, self.playTimeMinusButton, self.winConditioneMinusButton,
                                      self.winConditionPlusButton, self.lossConditionMinusButton, self.lossConditionPlusButton, self.playButton)
-        self.staticText =(self.roomTitle, self.playTimeHeader, self.winConditionHeader, self.lossConditionHeader, self.playButton,)
+        self.staticText =(self.roomTitle, self.playTimeHeader, self.winConditionHeader, self.lossConditionHeader)
 
     def goMenu(self):
         self.screen.fill((0, 0, 0))

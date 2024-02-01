@@ -17,3 +17,4 @@ class Fruits:
             fruitsCoords.append((fruit.coords.x, fruit.coords.y))
         
         return fruitsCoords
+    

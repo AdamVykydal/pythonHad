@@ -26,7 +26,7 @@ class LocalMultiplayerGame:
         self.snakeHead2 = SnakeHead(self.snakeCoords2)
         self.renderer = Renderer()
         self.fruits = Fruits()
-        self.score = Score()
+        self.score1 = Score()
         self.score2 = Score()
         self.snake1 = Snake(self.snakeHead)
         self.snake2 = Snake(self.snakeHead2)
@@ -34,8 +34,8 @@ class LocalMultiplayerGame:
         self.keySettings2 = {'up': pygame.K_UP, 'left': pygame.K_LEFT, 'down': pygame.K_DOWN, 'right': pygame.K_RIGHT}
         self.gameEvents = GameEvents(self.snakeHead, self.keySettings1)
         self.gameEvents2 = GameEvents(self.snakeHead2, self.keySettings2)
-        self.collisions = CollisionsLocalMultiplayer(
-            self.snakeHead, self.snake1, self.snake2, self.fruits, self.score, self, self.screenSize)
+        self.collisions1 = CollisionsLocalMultiplayer(
+            self.snakeHead, self.snake1, self.snake2, self.fruits, self.score1, self, self.screenSize)
         self.collisions2 = CollisionsLocalMultiplayer(
             self.snakeHead2, self.snake2, self.snake1, self.fruits, self.score2, self, self.screenSize)
         self.fruits.newFruit()
@@ -54,6 +54,8 @@ class LocalMultiplayerGame:
         self.gameTime = GameTime(gameOptions)
         self.remainingTime = 0
         self.escPauseMenu = EscPauseMenu(self.screen, self.screenSize, self.gameTime)
+        self.snake1Statistics = None
+        self.snake2Statistics = None
         
         
     def localMultiplayerGameLoop(self):
@@ -72,29 +74,26 @@ class LocalMultiplayerGame:
 
             self.clock.tick(60)
 
+        return(self.findWinnerAndGameStats())
+   
     def handleEventsLocalMultiplayer(self):
         self.currentTime = time.time()
         if self.currentTime - self.startTime >= 0.09:
             self.events = pygame.event.get()
             self.gameEvents.keyEvents(self.events)
             self.gameEvents2.keyEvents(self.events)
-            self.collisions.snakeAndFruit()
-            self.collisions.snakeAndTail()
-            self.collisions.snakeAndSnake()
+            self.collisions1.snakeAndFruit()
+            self.collisions1.snakeAndTail()
+            self.collisions1.snakeAndSnake()
             self.collisions2.snakeAndFruit()
             self.collisions2.snakeAndTail()
             self.collisions2.snakeAndSnake()
             if self.running:
                 self.running = self.escPauseMenu.checkIfEscIsPressed(self.events)
             if self.running:
-                self.running = self.score.checkScore(self.gameOptions)
+                self.running = self.score1.checkScore(self.gameOptions)
             if self.running:
                 self.running = self.score2.checkScore(self.gameOptions)
-    
-        end, self.remainingTime = self.gameTime.check()
-        
-        if end:
-            self.running = False
     
     def update(self):
         if self.currentTime - self.startTime >= 0.09:
@@ -104,9 +103,14 @@ class LocalMultiplayerGame:
             self.snakeHead2.moveSnakeHead()
             self.startTime = time.time()
         
-        self.collisions.snakeAndWall()
+        self.collisions1.snakeAndWall()
         self.collisions2.snakeAndWall()
 
+        end, self.remainingTime = self.gameTime.check()
+        
+        if end:
+            self.running = False
+    
     def localMultiplayerRenderer(self):
         self.renderer.renderFruits(
             self.screen, self.fruitTexture1, self.fruitTexture2, self.fruits.fruitBasket
@@ -117,5 +121,20 @@ class LocalMultiplayerGame:
         self.renderer.renderSnake(
             self.screen, self.snake2Texture, self.snakeParts2
         )
-        self.gameInfoBoard.renderMultiplayerCouter([self.score.points,self.score2.points])
+        self.gameInfoBoard.renderMultiplayerCouter([self.score1.points,self.score2.points])
         self.gameInfoBoard.renderMultiplayerClock(self.remainingTime)
+    
+    def findWinnerAndGameStats(self):
+        
+        snake1Lenght = len(self.snake1.parts)
+        snake2Lenght = len(self.snake2.parts)
+        
+        self.snake1Statistics = {"name":"snake1", "points":self.score1.points, "lenght":snake1Lenght, "fruits":self.collisions1.snakeEatedFruits}
+        self.snake2Statistics = {"name":"snake2", "points":self.score2.points, "lenght":snake2Lenght, "fruits":self.collisions2.snakeEatedFruits}
+        
+        if self.score1.points > self.score2.points:
+            return("snake1", self.snake1Statistics, self.snake2Statistics)
+        elif self.score1.points < self.score2.points:
+            return("snake2", self.snake1Statistics, self.snake2Statistics)
+        else:
+            return("draw", self.snake1Statistics, self.snake2Statistics)
