@@ -28,8 +28,9 @@ class SingleplayerGameResults:
         self.pointsText = Text(self.screenSize.width / 2 , self.screenSize.height - 600, "",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "", self.screen)
         
-    def goMenu(self, points, playTime):
+    def goMenu(self, points, stopwatch):
         
+        hours, minutes, seconds = stopwatch.getFormatedTime()
         self.okButton.renderText()
         
         while True:
@@ -40,7 +41,7 @@ class SingleplayerGameResults:
             
             self.gameResultTitle.renderText()
 
-            self.gameLenghtText.renderDynamicText("Play Time: " + str(playTime))
+            self.gameLenghtText.renderDynamicText("Play Time: " + str(hours) + ":" + str(minutes) + ":" + str(seconds))
             
             self.pointsText.renderDynamicText("Score: " + str(points))
             

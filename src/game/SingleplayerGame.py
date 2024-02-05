@@ -60,7 +60,7 @@ class SingleplayerGame:
 
             self.clock.tick(60)
         
-        return str(self.score.points), str(self.gameTime.time)
+        return str(self.score.points), self.gameTime
 
     def handleEventsSingleplayer(self):
         self.currentTime = time.time()

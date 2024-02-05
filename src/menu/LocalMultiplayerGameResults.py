@@ -27,18 +27,21 @@ class LocalMultiplayerGameResults:
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "", self.screen)
         self.snake2Text = Text(self.screenSize.width / 2 + 250, self.screenSize.height - 700, "",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "", self.screen)
+       
         self.pointsText = Text(self.screenSize.width / 2 , self.screenSize.height - 600, "",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, ": Points :", self.screen)
         self.snake1PointsText = Text(self.screenSize.width / 2 - 250 , self.screenSize.height - 600, "",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "", self.screen)
         self.snake2PointsText = Text(self.screenSize.width / 2 + 250, self.screenSize.height - 600, "",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "", self.screen)
+        
         self.lenghtText = Text(self.screenSize.width / 2 , self.screenSize.height - 500, "",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, ": Lenght :", self.screen)
         self.snake1LenghtText = Text(self.screenSize.width / 2 - 250 , self.screenSize.height - 500, "",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "", self.screen)
         self.snake2LenghtText = Text(self.screenSize.width / 2 + 250, self.screenSize.height - 500, "",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, "", self.screen)
+        
         self.fruitsText = Text(self.screenSize.width / 2 , self.screenSize.height - 400, "",
                               self.buttonsFont, self.primarTextColor, self.secondTextColor, ": Fruits :", self.screen)
         self.snake1FruitsText = Text(self.screenSize.width / 2 - 250 , self.screenSize.height - 400, "",
@@ -57,6 +60,7 @@ class LocalMultiplayerGameResults:
     def goMenu(self, winner, snake1Statistics ,snake2Statistics):
         
         self.winner = winner
+        print(winner, snake1Statistics ,snake2Statistics)
         
         self.chooseResultText()
         

@@ -123,7 +123,7 @@ class GameRoomMenu:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     
                     if self.leaveButton.rectangle.collidepoint(mousePosition):
-                        return self.leaveButton.name
+                        return self.leaveButton.name, 0, 0
                     
                     if self.readyButton.rectangle.collidepoint(mousePosition) and self.readyButton.pressed:
                         self.readyButton.pressed = 0
@@ -162,7 +162,7 @@ class GameRoomMenu:
             self.gameOptionsChanges = [0, 0, 0]
         
             if self.playersReady == [1, 1]:
-                return "start"
+                return "start", self.playerId, self.playerNames
            
             pygame.display.update()
             

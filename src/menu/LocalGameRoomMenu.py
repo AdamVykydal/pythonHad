@@ -51,7 +51,6 @@ class LocalGameRoomMenu:
         self.lossConditionMinusButton = Text(self.screenSize.width / 2 - 100, self.screenSize.height - 350, "",
                                       self.plusMinusFont, self.primarTextColor, self.secondTextColor, "-", self.screen)
         
-        
         self.twoColorMenuButtons = (self.backButton, self.playTimePlusButton, self.playTimeMinusButton, self.winConditioneMinusButton,
                                      self.winConditionPlusButton, self.lossConditionMinusButton, self.lossConditionPlusButton, self.playButton)
         self.staticText =(self.roomTitle, self.playTimeHeader, self.winConditionHeader, self.lossConditionHeader)

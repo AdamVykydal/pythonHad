@@ -13,6 +13,7 @@ from menu.MultiplayerMenu import MutiplayerMenu
 from menu.LocalGameRoomMenu import LocalGameRoomMenu
 from menu.LocalMultiplayerGameResults import LocalMultiplayerGameResults
 from menu.SingleplayerGameResults import SingleplayerGameResults
+from menu.MultiplayerGameResults import MultiplayerGameResults
 
 
 
@@ -31,6 +32,7 @@ class Game:
         self.multiplayerMenu = MutiplayerMenu(self.screen, self.screenSize)
         self.localGameRoomMenu = LocalGameRoomMenu(self.screen, self.screenSize)
         self.singleplayerGameResult = None
+        self.multiplayerGameResults = None
         self.localMultiplayerGameResults = None
         self.client = None
         self.gameResults = None
@@ -69,13 +71,17 @@ class Game:
                             if serverConected:
                                 
                                 while True:
-                                    pressedButton = self.gameRoomMenu.goMenu(
+                                    pressedButton, playerId, playerNames = self.gameRoomMenu.goMenu(
                                         self.client, self.multiplayerConnectMenu.nameBox.text, self.multiplayerConnectMenu.ipBox.text)
                                     
                                     if pressedButton == "start":
-                                        self.multiplayerGame = MultiplayerGame(self.screen, self.screenSize, self.gameRoomMenu.playerId)
-                                        self.multiplayerGame.multiplayergameLoop(
-                                            self.client)
+                                        self.multiplayerGame = MultiplayerGame(self.screen, self.screenSize, playerId, playerNames)
+                                        gameResults, snake1Statistics, snake2Statistics = self.multiplayerGame.multiplayergameLoop(self.client)
+                                        
+                                        self.multiplayerGameResults = MultiplayerGameResults(self.screen, self.screenSize)
+                                        self.multiplayerGameResults.goMenu(gameResults, snake1Statistics, snake2Statistics)
+                                        
+                                        self.multiplayerGame = self.multiplayerGameResults = None
                                     
                                     elif pressedButton == "leaveLobbyButton":
                                         self.client.clientSocket.close()

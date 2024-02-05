@@ -21,7 +21,7 @@ class Server:
         self.serverGameLogick = None
         self.fruitCoords = [(0, 0)]
         self.playersReady = [0, 0]
-        self.playing = 0
+        self.playing = False
         self.threadIdForNextCandidate = 0
         self.allThreadsIds = []
         self.playersNames = ["", ""]
@@ -44,8 +44,8 @@ class Server:
         try:
             while self.playing:
                 data = clientSocket.recv(1024)
-                if not data:
-                    break
+                #if not data:
+                    #break
                 self.clientsSnakesCoords[threadId] = pickle.loads(data)
                 
                 print( f"Received data: {clientIp}, {self.clientsSnakesCoords[threadId]}")
@@ -53,8 +53,6 @@ class Server:
                 gameIsFinished, collistionsInfo, playTime, self.fruitCoords = self.serverGameLogick.process(threadId)
                 
                 if gameIsFinished:
-                    self.clientsSnakesCoords = [[(0, 0)], [(0, 0)]]
-                    self.fruitCoords = [(0, 0)]
                     self.playing = False
                 
                 self.sendGameData(clientSocket, threadId, collistionsInfo, playTime)
@@ -68,6 +66,7 @@ class Server:
         try:
             if threadId == 0:
                 clientSocket.send(pickle.dumps([int(self.playing)] + [collistionsInfo] + [playTime] + [self.serverScore.score] + [self.clientsSnakesCoords[1]] + [self.fruitCoords]))
+                print( f"send data: {([int(self.playing)] + [collistionsInfo] + [playTime] + [self.serverScore.score] + [self.clientsSnakesCoords[1]] + [self.fruitCoords])}")
             else:
                 clientSocket.send(pickle.dumps([int(self.playing)] + [collistionsInfo] + [playTime] + [list(reversed(self.serverScore.score))] + [self.clientsSnakesCoords[0]] + [self.fruitCoords]))
 
@@ -86,8 +85,6 @@ class Server:
                 
                 threadIdGuess = 0
                 while True:
-                    print(self.allThreadsIds)
-                    print(threadIdGuess)
                     if threadIdGuess not in self.allThreadsIds:
                         self.allThreadsIds.append(threadIdGuess)
                         threadId = threadIdGuess
@@ -102,35 +99,41 @@ class Server:
 
     def gameMenuConnections(self, clientSocket, clientIp, threadId):
         while True:
-            #try:
+            try:
                 data = clientSocket.recv(1024)
                 data = pickle.loads(data)
+                print(data)
+                #if len(data) < 3:
+                    #break
             
-                self.playersReady[threadId] = data[0]
-                self.playersNames[threadId] = data[1]
-                gameOptionsChahnges = data[2]
+            except Exception as e:
+                print(e)
+                self.diconectClient(threadId, clientSocket)    
+                
+                
+                
+            self.playersReady[threadId] = data[0]
+            self.playersNames[threadId] = data[1]
+            gameOptionsChahnges = data[2]
 
-                self.gameOptions[0] += gameOptionsChahnges[0]
-                self.gameOptions[1] += gameOptionsChahnges[1]
-                self.gameOptions[2] += gameOptionsChahnges[2]
-                
-                if self.playersReady[threadId] != 0 and self.playersReady[threadId] != 1:
-                    self.playersReady[threadId] = 0
-                
-                print(clientIp, ":", self.playersReady[threadId],",", self.playersNames[threadId])
-                
-                clientSocket.send(pickle.dumps([threadId ,self.playersReady, self.playersNames, self.gameOptions]))
-                
-            #except Exception as e:
-                #print(e)
-                #self.diconectClient(threadId, clientSocket)   
-                
-                if self.playersReady == [1, 1]:
-                    self.playing = True
-                    self.receiveGameData(clientSocket, clientIp, threadId)
-                    self.playersReady = [0, 0]
+            self.gameOptions[0] += gameOptionsChahnges[0]
+            self.gameOptions[1] += gameOptionsChahnges[1]
+            self.gameOptions[2] += gameOptionsChahnges[2]
             
+            if self.playersReady[threadId] != 0 and self.playersReady[threadId] != 1:
+                self.playersReady[threadId] = 0
             
+            #print(clientIp, ":", self.playersReady[threadId],",", self.playersNames[threadId])
+            
+            clientSocket.send(pickle.dumps([threadId ,self.playersReady, self.playersNames, self.gameOptions]))
+            
+            if self.playersReady == [1, 1]:
+                self.playing = True
+                self.clientsSnakesCoords = [[(0, 0)], [(0, 0)]]
+                self.fruitCoords = [(0, 0)]
+                self.serverScore.score = [0 ,0]
+                self.receiveGameData(clientSocket, clientIp, threadId)     
+                self.playersReady = [0, 0]
                 
     def getLocalIp(self):
         try:

@@ -1,4 +1,5 @@
 import time
+import datetime
 
 class Stopwatch:
     def __init__(self):
@@ -22,3 +23,21 @@ class Stopwatch:
 
         self.time = elapsedTime
         self.time = round(self.time)
+   
+    def getFormatedTime(self):
+        timeDelta = datetime.timedelta(seconds=self.time)
+        hours = 0
+        minutes = 0
+        seconds = 0
+        
+        if self.time >= 3600:
+            hours = timeDelta.seconds // 3600
+        if self.time >= 60:
+            minutes = (timeDelta.seconds % 3600) // 60
+
+        seconds = timeDelta.seconds % 60
+
+        return(hours, minutes, seconds)
+        
+        
+

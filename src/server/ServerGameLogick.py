@@ -26,8 +26,6 @@ class ServerGameLogick:
         if not self.gameFinished:
             self.gameFinished, self.playTime = self.serverGameTime.check()
        
-        if self.gameFinished:
-            self.restartgame()
         
         collistionsInfo = [0,0,0]
         
@@ -41,7 +39,3 @@ class ServerGameLogick:
             collistionsInfo[2] = self.serverCollisions.snakeAndSnake(threadId)
 
         return self.gameFinished, collistionsInfo, self.playTime, self.fruits.getFruitsCoords()
-    
-    def restartgame(self):
-        self.serverScore.score = [0,0]
-        self.fruits.emptyFruitBasket()

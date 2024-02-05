@@ -7,6 +7,6 @@ class ServerScore:
         self.score[threadId] -= points
     def checkScore(self, threadId, gameOptions):
         if self.score[threadId] >= gameOptions[1] or self.score[threadId] <= gameOptions[2]:
-           return False
-        return True
+           return True
+        return False
     
