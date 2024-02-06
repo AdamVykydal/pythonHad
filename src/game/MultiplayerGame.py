@@ -133,5 +133,4 @@ class MultiplayerGame:
                 return(1, self.snake1Statistics, self.snake2Statistics)
             else:
                 return("draw", self.snake1Statistics, self.snake2Statistics)
-    
-        
+            

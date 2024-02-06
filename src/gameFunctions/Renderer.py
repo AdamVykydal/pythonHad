@@ -1,7 +1,11 @@
+from gameFunctions.RotateBodyParts import RotateBodyPart
 class Renderer:
+    def __init__(self) -> None:
+        self.renderBodyParts = RotateBodyPart()
     def renderSnake(self, screen, texture, objectsList):
         for objectForRender in objectsList:
             rectangle = texture.get_rect(topleft=(objectForRender.coords.x, objectForRender.coords.y))
+            self.renderBodyParts.checkAndRotate(objectForRender)
             screen.blit(texture, rectangle)
     
     def renderFruits(self, screen, texture1, texture2, objectsList):
@@ -12,8 +16,5 @@ class Renderer:
             elif fruitForRender.textureType == "greenApple":
                 screen.blit(texture2, rectangle)
 
-    def renderServerObject(self, screen, texture, coordsList):
-        for coords in coordsList:
-            rectangle = texture.get_rect(topleft=coords)
-            screen.blit(texture, rectangle)
+    
     

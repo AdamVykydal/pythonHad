@@ -12,6 +12,7 @@ from gameFunctions.Coords import Coords
 from recources.LoadResources import LoadResources
 from menu.EscPauseMenu import EscPauseMenu
 from gameFunctions.Stopwatch import Stopwatch
+from gameFunctions.RotateBodyParts import RotateBodyPart
 
 
 class SingleplayerGame:
@@ -43,6 +44,7 @@ class SingleplayerGame:
         self.currentTime = 0
         self.events = None
         self.escPauseMenu = EscPauseMenu(self.screen, self.screenSize, self.gameTime)
+        self.rotateBodyPart = RotateBodyPart()
 
     def singlplayerGameLoop(self):
         self.gameTime.start()
@@ -77,6 +79,8 @@ class SingleplayerGame:
             self.snake.snakeMove()
             self.snakeHead.moveSnakeHead()
             self.startTime = time.time()
+        
+        self.rotateBodyPart.checkAndRotate(self.snakeParts)
         
         self.collisions.snakeAndWall()
 

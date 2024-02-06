@@ -20,7 +20,7 @@ class CollisionsLocalMultiplayer(Collisions):
                 self.snake.addSnakePart()
                 self.score.addScore(1)
                 fruit.generateFruit()
-                self.fruits.newFruit()
+                #self.fruits.newFruit()
                 self.snakeEatedFruits += 1
 
     
